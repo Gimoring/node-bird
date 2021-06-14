@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link'; //next에는 자체적으로 라우터가 있음  이게 라우터 돔의 링크 태그임.
 import { Menu, Input, Row, Col } from 'antd';
-import styled from 'styled-components';
-
+import styled, { createGlobalStyle } from 'styled-components';
+import { useSelector } from 'react-redux';
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
 //gutter => 컬럼 사이의 간격.
 
+const Global = createGlobalStyle`
+.ant-row {
+	margin-right: 0 !important;
+	margin-left: 0 !important;
+}
+
+.ant-col:first-child {
+		padding-left: 0 !important;
+}
+
+.ant-col:last-child {
+	padding-right: 0 !important;
+}
+`;
 //컴포넌트를 스타일할 때 이렇게 할 수 있음.
 const SearchInput = styled(Input.Search)`
 	vertical-align: middle;
 `;
 
 const AppLayout = ({ children }) => {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	//isLoggedIn이 바뀌면 알아서 리렌더링 된다.
+	<Global />;
+	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 	return (
 		<div>
 			<Menu mode="horizontal">
@@ -41,11 +57,7 @@ const AppLayout = ({ children }) => {
 			</Menu>
 			<Row gutter={8}>
 				<Col xs={24} md={6}>
-					{isLoggedIn ? (
-						<UserProfile setIsLoggedIn={setIsLoggedIn} />
-					) : (
-						<LoginForm setIsLoggedIn={setIsLoggedIn} />
-					)}
+					{isLoggedIn ? <UserProfile /> : <LoginForm />}
 				</Col>
 				<Col xs={24} md={12}>
 					{children}

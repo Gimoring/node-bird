@@ -4,10 +4,11 @@ import React, { useMemo, useCallback } from 'react';
 // 캐슁이란?
 // => 컴퓨팅에서 캐슁이란 오랜시간이 걸리는 작업의 결과를 '저장'해서 시간과 비용을 필요로 회피하는 기법을 의미한다.
 import { Form, Input, Button } from 'antd';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
+import { loginAction } from '../reducers/user';
+import { useDispatch } from 'react-redux';
 
 const ButtonWrapper = styled.div`
 	margin-top: 10px;
@@ -17,7 +18,8 @@ const FormWrapper = styled(Form)`
 	padding: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+	const dispatch = useDispatch();
 	const [id, onChangeId] = useInput('');
 	const [password, onChangePassword] = useInput('');
 
@@ -31,8 +33,9 @@ const LoginForm = ({ setIsLoggedIn }) => {
 
 	const onSubmitForm = useCallback(() => {
 		console.log(id, password);
-		setIsLoggedIn(true);
-	}, [id, password]);
+		dispatch(loginAction({ id, password }));
+	}, [id, password]); // id, password가 바뀌면 새로운 함수가 생성되어 onSubmitForm 변수에 할당된다
+	// 만약 id와 password의 값이 동일하다면 다음 렌더링 때에도 이 함수를 재사용한다.
 
 	const style = useMemo(() => ({ marginTop: 10 }), []); //리렌더링해도 계속 같은 객체가 유지된다. 캐싱(저장)해줬기 때문
 	//리렌더링 최적화 해줍니다~
@@ -76,7 +79,4 @@ const LoginForm = ({ setIsLoggedIn }) => {
 	);
 };
 
-LoginForm.propTypes = {
-	setIsLoggedIn: PropTypes.func.isRequired,
-};
 export default LoginForm;
