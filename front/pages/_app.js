@@ -1,9 +1,11 @@
-//여기서 페이지들의 공통되는 것들을 처리할 수 있다.
+//	여기서 페이지들의 공통되는 것들을 처리할 수 있다.
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
+import withReduxSaga from 'next-redux-saga';
 import wrapper from '../store/configureStore';
+
 const NodeBird = ({ Component }) => {
 	return (
 		<>
@@ -26,4 +28,4 @@ NodeBird.propTypes = {
 	Component: PropTypes.elementType.isRequired,
 };
 
-export default wrapper.withRedux(NodeBird);
+export default wrapper.withRedux(withReduxSaga(NodeBird)); // 4. next redux saga 연결

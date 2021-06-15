@@ -7,11 +7,11 @@ import PostCard from '../components/PostCard';
 // 넥스트는 pages 폴더를 인식을 해서 안에 있는 파일들을 코드스플리팅 된 개별적인 페이지(컴포넌트)로 만들어준다.
 
 const Home = () => {
-	const { isLoggedIn } = useSelector((state) => state.user);
+	const { logInDone } = useSelector((state) => state.user);
 	const { mainPosts } = useSelector((state) => state.post);
 	return (
 		<AppLayout>
-			{isLoggedIn && <PostForm />}
+			{logInDone && <PostForm />}
 			{mainPosts.map((post) => (
 				<PostCard key={post.id} post={post} />
 			))}

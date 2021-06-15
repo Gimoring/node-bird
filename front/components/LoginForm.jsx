@@ -6,9 +6,9 @@ import React, { useMemo, useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { loginRequestAction } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
 import useInput from '../hooks/useInput';
-import { loginAction } from '../reducers/user';
-import { useDispatch } from 'react-redux';
 
 const ButtonWrapper = styled.div`
 	margin-top: 10px;
@@ -20,7 +20,8 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
 	const dispatch = useDispatch();
-	const [id, onChangeId] = useInput('');
+	const { logInLoading } = useSelector((state) => state.user);
+	const [email, onChangeEmail] = useInput('');
 	const [password, onChangePassword] = useInput('');
 
 	//컴포넌트에 프롭스로 넘겨주는 함수는 useCallback을 써야 최적화가 된다.
@@ -32,9 +33,9 @@ const LoginForm = () => {
 	// }, []);
 
 	const onSubmitForm = useCallback(() => {
-		console.log(id, password);
-		dispatch(loginAction({ id, password }));
-	}, [id, password]); // id, password가 바뀌면 새로운 함수가 생성되어 onSubmitForm 변수에 할당된다
+		console.log(email, password);
+		dispatch(loginRequestAction({ email, password }));
+	}, [email, password]); // id, password가 바뀌면 새로운 함수가 생성되어 onSubmitForm 변수에 할당된다
 	// 만약 id와 password의 값이 동일하다면 다음 렌더링 때에도 이 함수를 재사용한다.
 
 	const style = useMemo(() => ({ marginTop: 10 }), []); //리렌더링해도 계속 같은 객체가 유지된다. 캐싱(저장)해줬기 때문
@@ -44,29 +45,29 @@ const LoginForm = () => {
 	return (
 		<FormWrapper onFinish={onSubmitForm}>
 			<div>
-				<label htmlFor="user-id">아이디</label>
+				<label htmlFor="user-email">이메일</label>
 				<br />
 				<Input
-					type="text"
-					name="user-id"
-					value={id}
-					onChange={onChangeId}
+					type="email"
+					name="user-email"
+					value={email}
+					onChange={onChangeEmail}
 					required
 				/>
 			</div>
 			<div>
-				<label htmlFor="user-id">비밀번호</label>
+				<label htmlFor="user-password">비밀번호</label>
 				<br />
 				<Input
 					type="password"
-					name="user-id"
+					name="user-password"
 					value={password}
 					onChange={onChangePassword}
 					required
 				/>
 			</div>
 			<ButtonWrapper style={style}>
-				<Button type="primary" htmlType="submit" loading={false}>
+				<Button type="primary" htmlType="submit" loading={logInLoading}>
 					로그인
 				</Button>
 				<Link href="/signup">
